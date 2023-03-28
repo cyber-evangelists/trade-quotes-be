@@ -6,15 +6,20 @@ from lib.models.inputs.create_user_otp_input import CreateUserOtpInput
 from lib.models.inputs.create_user_input import CreateUserInput
 from lib.models.inputs.user_input import UserInput
 from lib.models.types.user import User
-from lib.services import bcrypt, jwt
+from lib.services import bcrypt
+from lib.utils import user_util
 
 
 @strawberry.type
 class Query:
     @strawberry.field
-    def user(self, user: UserInput) -> User:
+    async def user(self, user: UserInput) -> User:
         if user.email and user.password:
-            UserEntity.find()
+            searched_user = await UserEntity.find_one(UserEntity.email == user.email)
+            if bcrypt.check(user.password, searched_user.password):
+                return user_util.user_entity_to_user(searched_user)
+
+        raise Exception('Insufficient credentials')
 
 
 @strawberry.type
@@ -34,14 +39,7 @@ class Mutation:
         )
         await user_entity.save()
         inserted_user = await UserEntity.find_one(UserEntity.email == user.email)
-        print('insert user')
-        print(str(inserted_user.id))
-        return User(
-            id=inserted_user.id,
-            email=user.email,
-            phone_number=user.phone_number,
-            jwt=jwt.encode({'userId': str(user_entity.id)}),
-        )
+        return user_util.user_entity_to_user(inserted_user)
 
     @strawberry.field
     def create_user_otp(self, user: CreateUserOtpInput) -> bool:
