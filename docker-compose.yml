@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  mongodb:
+    restart: always
+    image: "mongo:6.0.4-jammy"
+    container_name: trade-quotes-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=abcdefgh
+    ports:
+      - "27017:27017"
+
+  backend:
+    build: .
+    restart: always
+    container_name: trade-quotes-be
+    ports:
+      - "8000:8000"
