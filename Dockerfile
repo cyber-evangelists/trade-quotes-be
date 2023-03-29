@@ -1,10 +1,8 @@
-FROM python:3.10.0
+FROM python:3.10-buster
 
 WORKDIR /app
 
 RUN pip install poetry
-
-RUN python -m poetry config virtualenvs.in-project true
 
 COPY pyproject.toml .
 

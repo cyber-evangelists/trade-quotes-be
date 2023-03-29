@@ -1,3 +1,4 @@
+import os
 from beanie import init_beanie
 import strawberry
 from fastapi import FastAPI
@@ -19,14 +20,20 @@ app = FastAPI()
 @app.on_event('startup')
 async def start():
     await init_beanie(
-        connection_string='mongodb://root:abcdefgh@localhost/tradequotes?authSource=admin',
+        connection_string=f'mongodb://root:abcdefgh@{os.environ["DB_HOST"]}/tradequotes?authSource=admin',
         document_models=[
             SellerEntity,
             TagEntity,
             UserEntity,
         ],
     )
-    print('initialized beanie')
+    if await TagEntity.count() == 0:
+        await TagEntity.insert_many([
+            TagEntity(label='Pressure Washing'),
+            TagEntity(label='Roof Cleaning'),
+            TagEntity(label='Gutter Cleaning'),
+        ])
+    print('initialized beanie odm')
 
 
 app.add_middleware(
