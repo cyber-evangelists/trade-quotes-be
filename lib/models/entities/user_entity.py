@@ -11,6 +11,7 @@ class UserEntity(Document):
     name: Optional[str] = None
     google_id_token: Optional[str] = None
     image_url: Optional[str] = None
+    otp: Optional[str] = None
     password: Optional[str] = None
     phone_number: str
     seller: Optional[SellerEntity] = None

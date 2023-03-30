@@ -17,5 +17,6 @@ services:
     container_name: trade-quotes-be
     environment:
       - DB_HOST=mongodb
+      - SMTP_PWD=viceversa
     ports:
       - "8000:8000"
