@@ -5,9 +5,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from strawberry.asgi import GraphQL
 
+from lib import config
 from lib.graphql import Query, Mutation
 from lib.models.entities.seller_entity import SellerEntity
-from lib.models.entities.tag_entity import TagEntity
+from lib.models.entities.seller_tag_entity import SellerTagEntity
 from lib.models.entities.user_entity import UserEntity
 
 
@@ -20,18 +21,18 @@ app = FastAPI()
 @app.on_event('startup')
 async def start():
     await init_beanie(
-        connection_string=f'mongodb://root:abcdefgh@{os.environ["DB_HOST"]}/tradequotes?authSource=admin',
+        connection_string=f'mongodb://root:abcdefgh@{config.DB_HOST}/tradequotes?authSource=admin',
         document_models=[
             SellerEntity,
-            TagEntity,
+            SellerTagEntity,
             UserEntity,
         ],
     )
-    if await TagEntity.count() == 0:
-        await TagEntity.insert_many([
-            TagEntity(label='Pressure Washing'),
-            TagEntity(label='Roof Cleaning'),
-            TagEntity(label='Gutter Cleaning'),
+    if await SellerTagEntity.count() == 0:
+        await SellerTagEntity.insert_many([
+            SellerTagEntity(label='Pressure Washing'),
+            SellerTagEntity(label='Roof Cleaning'),
+            SellerTagEntity(label='Gutter Cleaning'),
         ])
     print('initialized beanie odm')
 

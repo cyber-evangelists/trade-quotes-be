@@ -1,5 +1,5 @@
 from beanie import Document
 
 
-class TagEntity(Document):
+class SellerTagEntity(Document):
     label: str

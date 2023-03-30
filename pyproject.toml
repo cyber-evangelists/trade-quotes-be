@@ -13,6 +13,7 @@ strawberry-graphql = "^0.168.1"
 beanie = "^1.17.0"
 pyjwt = "^2.6.0"
 bcrypt = "^4.0.1"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "^2.0.2"
